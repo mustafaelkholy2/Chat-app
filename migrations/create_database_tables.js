@@ -19,6 +19,8 @@ export function up(knex) {
 
             table.foreign('group_name').references('Groups.group_name')
             table.foreign('username').references('Users.username')
+
+            table.unique(['group_name', 'username'])
         })
         .createTable('Messages', (table) => {
             table.increments('id').primary()
@@ -26,7 +28,7 @@ export function up(knex) {
             table.string('receiver').nullable()
             table.string('group_name').nullable()
             table.text('message').notNullable()
-            table.dateTime('tamestamp').defaultTo(knex.fn.now())
+            table.dateTime('timestamp').defaultTo(knex.fn.now())
 
             table.foreign('sender').references('Users.username')
         })
