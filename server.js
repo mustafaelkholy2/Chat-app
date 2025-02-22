@@ -3,6 +3,9 @@ import { WebSocketServer } from 'ws'
 import dotenv from 'dotenv'
 import knex from 'knex'
 import knexConfig from './knexfile.js'
+import { router as messagesRouter } from './routers/messagesRoutes.js'
+
+dotenv.config()
 
 const app = express()
 const db = knex(knexConfig)
@@ -83,3 +86,26 @@ wss.on('connection', (ws) => {
         }
     })
 })
+
+
+app.use('/messages', messagesRouter)
+
+app.get('/users', async (req, res) => {
+    try {
+        const users = await db("Users").select("username")
+        res.json({ users })
+    } catch (err) {
+        res.status(500).json({ error: "Database error", details: err.message });
+    }
+})
+
+app.get('/groups', async (req, res) => {
+    try {
+        const groups = await db("Groups").select("group_name")
+        res.json({ groups })
+    } catch (err) {
+        res.status(500).json({ error: "Database error", details: err.message });
+    }
+})
+
+app.listen(3000, () => console.log('server on port 3000'));
