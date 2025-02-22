@@ -30,6 +30,8 @@ export function up(knex) {
             table.text('message').notNullable()
             table.dateTime('timestamp').defaultTo(knex.fn.now())
 
+            //Bonus
+            table.boolean('read').defaultTo(false)
             table.foreign('sender').references('Users.username')
         })
 };
